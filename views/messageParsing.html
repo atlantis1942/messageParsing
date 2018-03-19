@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <head>
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+        <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="/javascripts/messageParsing.js"></script>
+        <style type="text/css">
+            .row-margin-top {
+                margin-top: 20px;
+            }
+            .row-margin-bottom {
+                margin-bottom: 20px;
+            }
+            .tooltip-inner {
+                max-width: 200px;
+                padding: 0.25rem 0.5rem;
+                color: #31708f;
+                text-align: center;
+                background-color: #d9edf7;
+                border-radius: 0.25rem;
+                border:1px solid #31708f;
+            }
+            .tooltip-arrow {
+                border-right-color: #31708f!important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2><p class="text-info">车辆实时信息上报工具</p></h2>
+            <!--报文数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#messageDataDiv">
+                            报文数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="messageDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-1 text-center">
+                                    <textarea class="form-control row-margin-bottom" id="message" rows="8"></textarea>
+                                    <button type="button" class="btn btn-primary" id="btn">生成报文</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--报文头部信息-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#timeDiv">
+                            报文头部信息
+                        </a>
+                    </h4>
+                </div>
+                <div id="timeDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="initialFlag" class="col-sm-3 control-label">起始符</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="initialFlag" placeholder="起始符" value="##" name="decValueHead" readonly="readonly">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="initialFlagHex" placeholder="HexValue" readonly="readonly" name="hexValueHead" value="2323">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="messageType" class="col-sm-3 control-label">命令标识</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="messageType" placeHolder="命令标识" name="decValueHead">
+                                        <option>实时信息上报</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="messageTypeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead" value="02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="responseType" class="col-sm-3 control-label">应答标志</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="responseType" placeHolder="应答标志" name="decValueHead">
+                                        <option>命令</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="responseTypeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead" value="FE">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vinCode" class="col-sm-3 control-label">唯一识别码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="vinCode" placeholder="唯一识别码" value="LLXA2A308HA000292" name="decValueHead" onblur="genASCHex(this)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="vinCodeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="encryptType" class="col-sm-3 control-label">数据加密方式</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="encryptType" placeHolder="数据加密方式" name="decValueHead">
+                                        <option>数据不加密</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="encryptTypeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead" value="01">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="payloadLength" class="col-sm-3 control-label">数据单元长度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="payloadLength" placeholder="数据单元长度" name="decValueHead" readonly="readonly" onblur="DecToHex(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="payloadLengthHex" placeholder="HexValue" readonly="readonly" name="hexValueHead">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkCodeHex" class="col-sm-3 control-label">校验码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="checkCodeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead">
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--采集时间-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#acqTimeDiv">
+                            采集时间
+                        </a>
+                    </h4>
+                </div>
+                <div id="acqTimeDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="form-group">
+                            <label for="acqTime" class="col-sm-3 control-label">采集时间</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="acqTime" placeholder="采集时间" value="20180318180000" name="decValue00" onblur="genTimeHex(this, 6)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="acqTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue00">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--消息体设置-->
+            <!--<div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#messageInfoDiv">
+                            消息体设置
+                        </a>
+                    </h4>
+                </div>
+                <div id="messageInfoDiv" class="panel-collapse collapse">
+                    <div class="row row-margin-top col-sm-offset-1">
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">整车数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">驱动电机数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">燃料电池数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">发动机数据
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row col-sm-offset-1">
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">定位数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">极值数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">报警数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">可充电储能装置电压数据
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row col-sm-offset-1">
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">可充电储能装置温度数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">位置拓展数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">电池状态数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">车门状态数据
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row col-sm-offset-1">
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">车灯状态数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">空调状态数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">启动熄火时间数据
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>
+                                <input type="checkbox" name="MessagePart">车辆状态数据
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top row-margin-bottom">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-success" id="selfull">全选</button>
+                            <button type="button" class="btn btn-info" id="selReverse">反选</button>
+                            <button type="button" class="btn btn-warning" id="selReset">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--整车数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#fullVehicleDataDiv">
+                            整车数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="fullVehicleDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label" data-toggle="tooltip" title="121445" data-placement="right">车辆状态</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="vehicleStatus" placeholder="车辆状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="vehicleStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">充电状态</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="chargeStatus" placeholder="充电状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="chargeStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">动力模式</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="powerMode" placeholder="动力模式" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="powerModeHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">车速</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="speed" placeholder="车速" value="600" name="decValue01" onblur="genHexFromDec(this, 2)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="speedHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">累计里程</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalMileage" placeholder="累计里程" value="50000" name="decValue01" onblur="genHexFromDec(this, 4)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalMileageHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">总电压</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalVoltage" placeholder="总电压" value="2200" name="decValue01" onblur="genHexFromDec(this, 2)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalVoltageHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">总电流</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalCurrent" placeholder="总电流" value="2000" name="decValue01" onblur="genHexFromDec(this, 2)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="totalCurrentHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">SOC</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="soc" placeholder="SOC" value="75" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="socHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">DC-DC状态</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="DC-DCStatus" placeholder="DC-DC状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="DC-DCStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">档位</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="gear" placeholder="档位" value="00110100" name="decValue01" onblur="genHexFromBin(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="gearHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">绝缘电阻</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="insulationResistance" placeholder="绝缘电阻" value="30000" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="insulationResistanceHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">加速踏板行程值</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="acceleratorPedal" placeholder="加速踏板行程值" value="60" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="acceleratorPedalHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleStatus" class="col-sm-3 control-label">制动踏板行程值</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="brakePedal" placeholder="制动踏板行程值" value="20" name="decValue01" onblur="genHexFromDec(this, 1)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="brakePedalHex" placeholder="HexValue" readonly="readonly" name="hexValue01">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--驱动电机数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#driverDataDiv">
+                            驱动电机数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="driverDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="vehicleStatus" class="col-sm-3 control-label">驱动电机个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCount" placeholder="驱动电机个数" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCountHex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">驱动电机列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverNo1" class="col-sm-3 control-label">驱动电机序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo1" placeholder="驱动电机序号" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverStatus1" class="col-sm-3 control-label">驱动电机状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus1" placeholder="驱动电机状态" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverCtrlTemp1" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp1" placeholder="驱动点击控制器温度" value="60" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverRPM1" class="col-sm-3 control-label">驱动电机转速</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM1" placeholder="驱动电机转速" value="28000" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTorque1" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque1" placeholder="驱动电机转矩" value="25000" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTemp1" class="col-sm-3 control-label">驱动电机温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp1" placeholder="驱动电机温度" value="80" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlInputVoltage1" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage1" placeholder="电机控制器输入电压" value="30000" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlDCBusCurrent1" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent1" placeholder="电机控制器直流母线电流" value="10000" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent1Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <!--<hr>
+                            <div class="form-group">
+                                <label for="driverNo2" class="col-sm-3 control-label">驱动电机序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo2" placeholder="驱动电机序号" value="2" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverStatus2" class="col-sm-3 control-label">驱动电机状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus2" placeholder="驱动电机状态" value="2" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverCtrlTemp2" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp2" placeholder="驱动点击控制器温度" value="61" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverRPM2" class="col-sm-3 control-label">驱动电机转速</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM2" placeholder="驱动电机转速" value="28001" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTorque2" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque2" placeholder="驱动电机转矩" value="25001" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTemp2" class="col-sm-3 control-label">驱动电机温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp2" placeholder="驱动电机温度" value="81" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlInputVoltage2" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage2" placeholder="电机控制器输入电压" value="30001" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlDCBusCurrent2" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent2" placeholder="电机控制器直流母线电流" value="10001" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent2Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="driverNo3" class="col-sm-3 control-label">驱动电机序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo3" placeholder="驱动电机序号" value="3" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverNo3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverStatus3" class="col-sm-3 control-label">驱动电机状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus3" placeholder="驱动电机状态" value="3" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverStatus3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverCtrlTemp3" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp3" placeholder="驱动点击控制器温度" value="62" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverCtrlTemp3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverRPM3" class="col-sm-3 control-label">驱动电机转速</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM3" placeholder="驱动电机转速" value="28002" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverRPM3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTorque3" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque3" placeholder="驱动电机转矩" value="25002" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTorque3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverTemp3" class="col-sm-3 control-label">驱动电机温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp3" placeholder="驱动电机温度" value="82" name="decValue02" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverTemp3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlInputVoltage3" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage3" placeholder="电机控制器输入电压" value="30002" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlInputVoltage3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ctrlDCBusCurrent3" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent3" placeholder="电机控制器直流母线电流" value="10002" name="decValue02" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="ctrlDCBusCurrent3Hex" placeholder="HexValue" readonly="readonly" name="hexValue02">
+                                </div>
+                            </div>
+                            <hr>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--燃料电池数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#fuelCellDataDiv">
+                            燃料电池数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="fuelCellDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="fuelCellVoltage" class="col-sm-3 control-label">燃料电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelCellVoltage" placeholder="燃料电池电压" value="10000" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelCellVoltageHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fuelCellCurrent" class="col-sm-3 control-label">燃料电池电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelCellCurrent" placeholder="燃料电池电流" value="5000" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelCellCurrentHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fuelConsumptionRate" class="col-sm-3 control-label">燃料消耗率</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelConsumptionRate" placeholder="燃料消耗率" value="5000" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="fuelConsumptionRateHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeCount" class="col-sm-3 control-label">燃料电池温度探针总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCount" placeholder="燃料电池温度探针总数" value="1" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCountHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">燃料电池温度探针列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp1" class="col-sm-3 control-label">温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp1" placeholder="温度" value="90" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp1Hex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="probeTemp2" class="col-sm-3 control-label">温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp2" placeholder="温度" value="91" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp2Hex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp3" class="col-sm-3 control-label">温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp3" placeholder="温度" value="92" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp3Hex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>-->
+                            <hr>
+                            <div class="form-group">
+                                <label for="hydrogenSysMaxTemp" class="col-sm-3 control-label">氢系统中最高温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenSysMaxTemp" placeholder="氢系统中最高温度" value="1000" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenSysMaxTempHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxTempProbeNo" class="col-sm-3 control-label">氢系统中最高温度探针代号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempProbeNo" placeholder="氢系统中最高温度探针代号" value="5" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempProbeNoHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hydrogenMaxConcentration" class="col-sm-3 control-label">氢气最高浓度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenMaxConcentration" placeholder="氢气最高浓度" value="24000" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenMaxConcentrationHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxConcentrationSensorNo" class="col-sm-3 control-label">氢气最高浓度传感器代号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxConcentrationSensorNo" placeholder="氢气最高浓度传感器代号" value="8" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxConcentrationSensorNoHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hydrogenMaxPressure" class="col-sm-3 control-label">氢气最高压力</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenMaxPressure" placeholder="氢气最高压力" value="450" name="decValue03" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="hydrogenMaxPressureHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxPressureSensorNo" class="col-sm-3 control-label">氢气最高压力传感器代号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxPressureSensorNo" placeholder="氢气最高压力传感器代号" value="17" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxPressureSensorNoHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="highTensionDC-DCstatus" class="col-sm-3 control-label">高压DC/DC状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="highTensionDC-DCstatus" placeholder="高压DC/DC状态" value="1" name="decValue03" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="highTensionDC-DCstatusHex" placeholder="HexValue" readonly="readonly" name="hexValue03">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--发动机数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#motorDataDiv">
+                            发动机数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="motorDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="motorStatus" class="col-sm-3 control-label">发动机状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorStatus" placeholder="发动机状态" value="1" name="decValue04" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue04">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="motorRPM" class="col-sm-3 control-label">曲轴转速</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorRPM" placeholder="曲轴转速" value="32000" name="decValue04" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorRPMHex" placeholder="HexValue" readonly="readonly" name="hexValue04">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="motorFuelConsumptionRate" class="col-sm-3 control-label">燃料消耗率</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorFuelConsumptionRate" placeholder="燃料消耗率" value="12000" name="decValue04" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorFuelConsumptionRateHex" placeholder="HexValue" readonly="readonly" name="hexValue04">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--定位数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#positionDataDiv">
+                            定位数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="positionDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="positionStatus" class="col-sm-3 control-label">定位状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="positionStatus" placeholder="定位状态" value="00000000" name="decValue05" onblur="genHexFromBin(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="positionStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue05">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="longitude" class="col-sm-3 control-label">经度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="longitude" placeholder="经度" value="119345442" name="decValue05" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="longitudeHex" placeholder="HexValue" readonly="readonly" name="hexValue05">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="latitude" class="col-sm-3 control-label">纬度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="latitude" placeholder="纬度" value="26075960" name="decValue05" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="latitudeHex" placeholder="HexValue" readonly="readonly" name="hexValue05">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--极值数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#extremumDataDiv">
+                            极值数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="extremumDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="maxVoltageSubSysNo" class="col-sm-3 control-label">最高电压电池子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltageSubSysNo" placeholder="最高电压电池子系统号" value="3" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltageSubSysNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxVoltageCellNo" class="col-sm-3 control-label">最高电压电池单体代号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltageCellNo" placeholder="最高电压电池单体代号" value="4" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltageCellNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxVoltage" class="col-sm-3 control-label">最高电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltage" placeholder="最高电压" value="8000" name="decValue06" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxVoltageHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minVoltageSubSysNo" class="col-sm-3 control-label">最低电压电池子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltageSubSysNo" placeholder="最低电压电池子系统号" value="5" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltageSubSysNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minVoltageCellNo" class="col-sm-3 control-label">最低电压电池单体代号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltageCellNo" placeholder="最低电压电池单体代号" value="6" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltageCellNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minVoltage" class="col-sm-3 control-label">最低电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltage" placeholder="最低电压" value="5000" name="decValue06" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minVoltageHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxTempSubSysNo" class="col-sm-3 control-label">最高温度子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempSubSysNo" placeholder="最高温度子系统号" value="7" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempSubSysNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxTempProbeNo" class="col-sm-3 control-label">最高温度探针序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempProbeSn" placeholder="最高温度探针序号" value="8" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempProbeSnHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxTemp" class="col-sm-3 control-label">最高温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTemp" placeholder="最高温度" value="170" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxTempHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minTempSubSysNo" class="col-sm-3 control-label">最低温度子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTempSubSysNo" placeholder="最低温度子系统号" value="9" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTempSubSysNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minTempProbeNo" class="col-sm-3 control-label">最低温度探针序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTempProbeNo" placeholder="最低温度探针序号" value="10" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTempProbeNoHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minTemp" class="col-sm-3 control-label">最低温度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTemp" placeholder="最低温度" value="125" name="decValue06" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="minTempHex" placeholder="HexValue" readonly="readonly" name="hexValue06">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--报警数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#alarmDataDiv">
+                            报警数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="alarmDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="maxAlarmLevel" class="col-sm-3 control-label">最高报警等级</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxAlarmLevel" placeholder="最高报警等级" value="3" name="decValue07" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="maxAlarmLevelHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="generalAlarmFlag" class="col-sm-3 control-label">通用报警标志</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="generalAlarmFlag" placeholder="通用报警标志" value="01010101000000000000000000000000" name="decValue07" onblur="genHexFromBin(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="generalAlarmFlagHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="storageDownCnt" class="col-sm-3 control-label">可充电储能装置故障总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCnt" placeholder="可充电储能装置故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCntHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">可充电储能装置故障代码列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="storageDownCode1" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode1" placeholder="可充电储能装置故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode1Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="storageDownCode2" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode2" placeholder="可充电储能装置故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode2Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="storageDownCode3" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode3" placeholder="可充电储能装置故障代码" value="103" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageDownCode3Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>-->
+                            <hr>
+                            <div class="form-group">
+                                <label for="driverDownCnt" class="col-sm-3 control-label">驱动电机故障总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCnt" placeholder="驱动电机故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCntHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">驱动电机故障代码列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverDownCode1" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode1" placeholder="驱动电机故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode1Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="driverDownCode2" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode2" placeholder="驱动电机故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode2Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="driverDownCode3" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode3" placeholder="驱动电机故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="driverDownCode3Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>-->
+                            <hr>
+                            <div class="form-group">
+                                <label for="motorDownCnt" class="col-sm-3 control-label">发动机故障总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCnt" placeholder="发动机故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCntHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">发动机故障代码列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="motorDownCode1" class="col-sm-3 control-label">发动机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode1" placeholder="发动机故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode1Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="motorDownCode2" class="col-sm-3 control-label">发动机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode2" placeholder="发动机故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode2Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="motorDownCode3" class="col-sm-3 control-label">发动机故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode3" placeholder="发动机故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="motorDownCode3Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>-->
+                            <hr>
+                            <div class="form-group">
+                                <label for="otherDownCnt" class="col-sm-3 control-label">其他故障总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCnt" placeholder="其他故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCntHex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">其他故障代码列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherDownCode1" class="col-sm-3 control-label">其他故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode1" placeholder="其他故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode1Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="otherDownCode2" class="col-sm-3 control-label">其他故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode2" placeholder="其他故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode2Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherDownCode3" class="col-sm-3 control-label">其他故障代码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode3" placeholder="其他故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="otherDownCode3Hex" placeholder="HexValue" readonly="readonly" name="hexValue07">
+                                </div>
+                            </div>-->
+                            <hr>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--可充电储能装置电压数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#storageDeviceVolDataDiv">
+                            可充电储能装置电压数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="storageDeviceVolDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="storageSubSysCnt" class="col-sm-3 control-label">可充电储能子系统个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageSubSysCnt" placeholder="可充电储能子系统个数" value="1" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="storageSubSysCntHex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">可充电储能子系统电压信息列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="subSysNo1" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo1" placeholder="可充电储能子系统号" value="1" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceVoltage1" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage1" placeholder="可充电储能装置电压" value="2200" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceCurrent1" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent1" placeholder="可充电储能装置电流" value="12000" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellCnt1" class="col-sm-3 control-label">单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt1" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellNoStart1" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart1" placeholder="本帧起始电池序号" value="1" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellCnt1" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt1" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt1Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">单体电池电压列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage11" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage11" placeholder="单体电池电压" value="32000" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage11Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage12" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage12" placeholder="单体电池电压" value="32001" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage12Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage13" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage13" placeholder="单体电池电压" value="32002" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage13Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <!--<hr>
+                            <div class="form-group">
+                                <label for="subSysNo2" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo2" placeholder="可充电储能子系统号" value="2" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceVoltage2" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage2" placeholder="可充电储能装置电压" value="2201" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceCurrent2" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent2" placeholder="可充电储能装置电流" value="12001" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellCnt2" class="col-sm-3 control-label">单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt2" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellNoStart2" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart2" placeholder="本帧起始电池序号" value="4" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellCnt2" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt2" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt2Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">单体电池电压列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage21" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage21" placeholder="单体电池电压" value="2204" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage21Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage22" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage22" placeholder="单体电池电压" value="2205" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage22Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage23" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage23" placeholder="单体电池电压" value="2206" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage23Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="subSysNo3" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo3" placeholder="可充电储能子系统号" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subSysNo3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceVoltage3" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage3" placeholder="可充电储能装置电压" value="2202" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceVoltage3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deviceCurrent3" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent3" placeholder="可充电储能装置电流" value="12002" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="deviceCurrent3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellCnt3" class="col-sm-3 control-label">单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt3" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellCnt3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellNoStart3" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart3" placeholder="本帧起始电池序号" value="7" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellNoStart3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frameCellCnt3" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt3" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="frameCellCnt3Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">单体电池电压列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage31" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage31" placeholder="单体电池电压" value="2207" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage31Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage32" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage32" placeholder="单体电池电压" value="2208" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage32Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellVoltage33" class="col-sm-3 control-label">单体电池电压</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage33" placeholder="单体电池电压" value="2209" name="decValue08" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellVoltage33Hex" placeholder="HexValue" readonly="readonly" name="hexValue08">
+                                </div>
+                            </div>
+                            <hr>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--可充电储能装置温度数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#storageDeviceTempDataDiv">
+                            可充电储能装置温度数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="storageDeviceTempDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="tempstorageSubSysCnt" class="col-sm-3 control-label">可充电储能子系统个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempstorageSubSysCnt" placeholder="可充电储能子系统个数" value="1" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempstorageSubSysCntHex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">可充电储能子系统温度信息列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="tempsubSysNo1" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo1" placeholder="可充电储能子系统号" value="1" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo1Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeCnt1" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt1" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt1Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp11" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp11" placeholder="探针温度值" value="85" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp11Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp12" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp12" placeholder="探针温度值" value="86" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp12Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp13" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp13" placeholder="探针温度值" value="87" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp13Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <!--<hr>
+                            <div class="form-group">
+                                <label for="tempsubSysNo2" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo2" placeholder="可充电储能子系统号" value="2" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo2Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeCnt2" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt2" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt2Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp21" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp21" placeholder="探针温度值" value="88" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp21Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp22" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp22" placeholder="探针温度值"  value="89" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp22Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp23" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp23" placeholder="探针温度值" value="90" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp23Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="tempsubSysNo3" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo3" placeholder="可充电储能子系统号" value="3" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="tempsubSysNo3Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeCnt3" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt3" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeCnt3Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp31" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp31" placeholder="探针温度值" value="91" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp31Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp32" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp32" placeholder="探针温度值" value="92" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp32Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="probeTemp33" class="col-sm-3 control-label">探针温度值</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp33" placeholder="探针温度值" value="93" name="decValue09" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="probeTemp33Hex" placeholder="HexValue" readonly="readonly" name="hexValue09">
+                                </div>
+                            </div>
+                            <hr>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--位置拓展数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#positionExtDataDiv">
+                            位置拓展数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="positionExtDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="direction" class="col-sm-3 control-label">方向</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="direction" placeholder="方向" value="270" name="decValue80" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="directionHex" placeholder="HexValue" readonly="readonly" name="hexValue80">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--电池状态数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#cellStatusDataDiv">
+                            电池状态数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="cellStatusDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="remainderPCT" class="col-sm-3 control-label">剩余电量百分比</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="remainderPCT" placeholder="剩余电量百分比" value="70" name="decValue81" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="remainderPCTHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="residualMileage" class="col-sm-3 control-label">剩余可行驶里程</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="residualMileage" placeholder="剩余可行驶里程" value="230" name="decValue81" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="residualMileageHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="plugConnStatus" class="col-sm-3 control-label">充电插头连接状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="plugConnStatus" placeholder="充电插头连接状态" value="2" name="decValue81" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="plugConnStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="remainderChargeTime" class="col-sm-3 control-label">剩余充电时间</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="remainderChargeTime" placeholder="剩余充电时间" value="50" name="decValue81" onblur="genHexFromDec(this, 4)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="remainderChargeTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cellEqualization" class="col-sm-3 control-label">电池均衡激活</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellEqualization" placeholder="电池均衡激活" value="1" name="decValue81" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="cellEqualizationHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reserve" class="col-sm-3 control-label">预留</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="reserve" placeholder="预留" value="0" name="decValue81" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="reserveHex" placeholder="HexValue" readonly="readonly" name="hexValue81">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--车门状态数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#vehicleDoorDataDiv">
+                            车门状态数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="vehicleDoorDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="doorDataLength" class="col-sm-3 control-label">车门数据长度</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="doorDataLength" placeholder="车门数据长度" value="2" name="decValue82" onblur="genHexFromDec(this, 2)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="doorDataLengthHex" placeholder="HexValue" readonly="readonly" name="hexValue82">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="doorData" class="col-sm-3 control-label">车门数据</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="doorData" placeholder="车门数据" value="0101000100000000" name="decValue82" onblur="genHexFromBin(this, 2)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="doorDataHex" placeholder="HexValue" readonly="readonly" name="hexValue82">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="key" class="col-sm-3 control-label">车钥匙</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="key" placeholder="车钥匙" value="2" name="decValue82" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="keyHex" placeholder="HexValue" readonly="readonly" name="hexValue82">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--车灯数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#vehicleLightDataDiv">
+                            车灯状态数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="vehicleLightDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="lightDataLength" class="col-sm-3 control-label">车灯数据长度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="lightDataLength" placeholder="车灯数据长度" value="2" name="decValue83" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="lightDataLengthHex" placeholder="HexValue" readonly="readonly" name="hexValue83">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lightData" class="col-sm-3 control-label">车灯数据</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="lightData" placeholder="车灯数据" value="1101110100000000" name="decValue83" onblur="genHexFromBin(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="lightDataHex" placeholder="HexValue" readonly="readonly" name="hexValue83">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--空调数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#vehicleAirCondDataDiv">
+                            空调状态数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="vehicleAirCondDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="airCondDataLength" class="col-sm-3 control-label">空调数据长度</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="airCondDataLength" placeholder="空调数据长度" value="7" name="decValue84" onblur="genHexFromDec(this, 2)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="airCondDataLengthHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="airCondData" class="col-sm-3 control-label">空调数据</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="airCondData" placeholder="空调数据" value="00000001000000110000001000000011000000010000000000000100" name="decValue84" onblur="genHexFromBin(this, 7)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="airCondDataHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                </div>-->
+                                <div class="row row-margin-bottom text-left col-sm-offset-1">
+                                    <h4><p class="text-info">空调数据</p></h4>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ACStatus" class="col-sm-3 control-label">A/C开关状态</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="ACStatus" placeholder="A/C开关状态" value="1" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="ACStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tempGear" class="col-sm-3 control-label">车内温度值</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="tempGear" placeholder="车内温度值" value="3" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="tempGearHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="amountOfWind" class="col-sm-3 control-label">风量调节</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="amountOfWind" placeholder="风量调节" value="2" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="amountOfWindHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="windMode" class="col-sm-3 control-label">出风模式</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="windMode" placeholder="出风模式" value="3" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="windModeHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="windMode" class="col-sm-3 control-label">前风档除霜</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="frontWindshieldDefrost" placeholder="前风档除霜" value="1" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="frontWindshieldDefrostHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rearWindshieldHeat" class="col-sm-3 control-label">后风挡加热</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="rearWindshieldHeat" placeholder="后风挡加热" value="0" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="rearWindshieldHeatHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="controllMode" class="col-sm-3 control-label">空调控制模式</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="controllMode" placeholder="空调控制模式" value="4" name="decValue84" onblur="genHexFromDec(this, 1)">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" id="controllModeHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--启动熄火时间数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#IGNDataDiv">
+                            启动熄火时间数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="IGNDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="IGNOnTime" class="col-sm-3 control-label">启动时间</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="IGNOnTime" placeholder="启动时间" value="20180312173000" name="decValue85" onblur="genTimeHex(this, 6)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="IGNOnTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue85">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="IGNOffTime" class="col-sm-3 control-label">熄火时间</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="IGNOffTime" placeholder="熄火时间" value="20180312214020" name="decValue85" onblur="genTimeHex(this, 6)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="IGNOffTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue85">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--车辆状态数据-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#vehicleStatusDataDiv">
+                            车辆状态数据
+                        </a>
+                    </h4>
+                </div>
+                <div id="vehicleStatusDataDiv" class="panel-collapse collapse">
+                    <form class="form-horizontal row-margin-top">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="powerSysReady" class="col-sm-3 control-label">动力系统就绪</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="powerSysReady" placeholder="动力系统就绪" value="1" name="decValue86" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="powerSysReadyHex" placeholder="HexValue" readonly="readonly" name="hexValue86">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="emerPowerDown" class="col-sm-3 control-label">紧急下电请求</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="emerPowerDown" placeholder="紧急下电请求" value="0" name="decValue86" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="emerPowerDownHex" placeholder="HexValue" readonly="readonly" name="hexValue86">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="currentStatus" class="col-sm-3 control-label">车辆当前状态</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="currentStatus" placeholder="车辆当前状态" value="2" name="decValue86" onblur="genHexFromDec(this, 1)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="currentStatusHex" placeholder="HexValue" readonly="readonly" name="hexValue86">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
