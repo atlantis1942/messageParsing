@@ -9,7 +9,7 @@ $(function () {
 });
 
 function showTip (element) {
-    console.log($(element).attr("for"));
+    $(element).attr("title", tips[$(element).attr("code")]).tooltip('fixTitle').tooltip('show');
 }
 
 function genHexFromDec(element, length) {
@@ -36,15 +36,15 @@ function genTimeHex(element, length) {
         return false;
     }
     var dataLen = decValue.length;
-    if (dataLen != 14) {
+    if (dataLen != 12) {
         return false;
     }
-    var year = decValue.substr(2, 2);
-    var month = decValue.substr(4, 2);
-    var day = decValue.substr(6, 2);
-    var hour = decValue.substr(8, 2);
-    var minute = decValue.substr(10, 2);
-    var second = decValue.substr(12, 2);
+    var year = decValue.substr(0, 2);
+    var month = decValue.substr(2, 2);
+    var day = decValue.substr(4, 2);
+    var hour = decValue.substr(6, 2);
+    var minute = decValue.substr(8, 2);
+    var second = decValue.substr(10, 2);
     var data = [];
     data.push(DecToHex(year, 1));
     data.push(DecToHex(month, 1));
@@ -103,6 +103,7 @@ function BinToHex(binValue, length) {
 }
 
 function genMessage() {
+    $("#message").val("");
     var payloadData = [];
     $("input[name=hexValue00]").each(function() {
         payloadData.push($(this).val())

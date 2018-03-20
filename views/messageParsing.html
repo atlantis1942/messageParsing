@@ -2,11 +2,13 @@
 <html>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <head>
+        <title>车辆实时信息上报工具</title>
         <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
         <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
         <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="/javascripts/messageParsing.js"></script>
+        <script src="/javascripts/tips.min.js"></script>
         <style type="text/css">
             .row-margin-top {
                 margin-top: 20px;
@@ -15,13 +17,15 @@
                 margin-bottom: 20px;
             }
             .tooltip-inner {
-                max-width: 200px;
+                max-width: 250px;
                 padding: 0.25rem 0.5rem;
                 color: #31708f;
                 text-align: center;
                 background-color: #d9edf7;
                 border-radius: 0.25rem;
                 border:1px solid #31708f;
+                font-size: 14px;
+                text-align:left;
             }
             .tooltip-arrow {
                 border-right-color: #31708f!important;
@@ -130,7 +134,7 @@
                             <div class="form-group">
                                 <label for="checkCodeHex" class="col-sm-3 control-label">校验码</label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="checkCodeHex" placeholder="HexValue" readonly="readonly" name="hexValueHead">
+                                    <input type="text" class="form-control" id="checkCodeHex" placeholder="HexValue" readonly="readonly" name="checkCode">
                                 </div>
                             </div>
 
@@ -153,7 +157,7 @@
                         <div class="form-group">
                             <label for="acqTime" class="col-sm-3 control-label">采集时间</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" id="acqTime" placeholder="采集时间" value="20180318180000" name="decValue00" onblur="genTimeHex(this, 6)">
+                                <input type="text" class="form-control" id="acqTime" placeholder="采集时间" value="180318180000" name="decValue00" onblur="genTimeHex(this, 6)">
                             </div>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="acqTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue00">
@@ -283,7 +287,7 @@
                 <div id="fullVehicleDataDiv" class="panel-collapse collapse">
                     <form class="form-horizontal row-margin-top">
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label" data-toggle="tooltip" title="121445" data-placement="right">车辆状态</label>
+                            <label for="vehicleStatus" code="vehicleStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车辆状态</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="vehicleStatus" placeholder="车辆状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -292,7 +296,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">充电状态</label>
+                            <label for="chargeStatus" code="chargeStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">充电状态</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="chargeStatus" placeholder="充电状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -301,7 +305,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">动力模式</label>
+                            <label for="powerMode" code="powerMode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">动力模式</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="powerMode" placeholder="动力模式" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -310,7 +314,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">车速</label>
+                            <label for="speed" code="speed" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车速</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="speed" placeholder="车速" value="600" name="decValue01" onblur="genHexFromDec(this, 2)">
                             </div>
@@ -319,7 +323,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">累计里程</label>
+                            <label for="totalMileage" code="totalMileage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">累计里程</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="totalMileage" placeholder="累计里程" value="50000" name="decValue01" onblur="genHexFromDec(this, 4)">
                             </div>
@@ -328,7 +332,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">总电压</label>
+                            <label for="totalVoltage" code="totalVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">总电压</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="totalVoltage" placeholder="总电压" value="2200" name="decValue01" onblur="genHexFromDec(this, 2)">
                             </div>
@@ -337,7 +341,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">总电流</label>
+                            <label for="totalCurrent" code="totalCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">总电流</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="totalCurrent" placeholder="总电流" value="2000" name="decValue01" onblur="genHexFromDec(this, 2)">
                             </div>
@@ -346,7 +350,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">SOC</label>
+                            <label for="soc" code="soc" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">SOC</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="soc" placeholder="SOC" value="75" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -355,7 +359,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">DC-DC状态</label>
+                            <label for="DC-DCStatus" code="DC-DCStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">DC-DC状态</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="DC-DCStatus" placeholder="DC-DC状态" value="1" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -364,7 +368,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">档位</label>
+                            <label for="gear" code="gear" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">档位</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="gear" placeholder="档位" value="00110100" name="decValue01" onblur="genHexFromBin(this, 1)">
                             </div>
@@ -373,7 +377,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">绝缘电阻</label>
+                            <label for="insulationResistance" code="insulationResistance" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">绝缘电阻</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="insulationResistance" placeholder="绝缘电阻" value="30000" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -382,7 +386,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">加速踏板行程值</label>
+                            <label for="acceleratorPedal" code="acceleratorPedal" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">加速踏板行程值</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="acceleratorPedal" placeholder="加速踏板行程值" value="60" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -391,7 +395,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="vehicleStatus" class="col-sm-3 control-label">制动踏板行程值</label>
+                            <label for="brakePedal" code="brakePedal" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">制动踏板行程值</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" id="brakePedal" placeholder="制动踏板行程值" value="20" name="decValue01" onblur="genHexFromDec(this, 1)">
                             </div>
@@ -416,7 +420,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="vehicleStatus" class="col-sm-3 control-label">驱动电机个数</label>
+                                <label for="driverCount" code="driverCount" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverCount" placeholder="驱动电机个数" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -429,7 +433,7 @@
                                 <h4><p class="text-info">驱动电机列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="driverNo1" class="col-sm-3 control-label">驱动电机序号</label>
+                                <label for="driverNo1" code="driverNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverNo1" placeholder="驱动电机序号" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -438,7 +442,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverStatus1" class="col-sm-3 control-label">驱动电机状态</label>
+                                <label for="driverStatus1" code="driverStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverStatus1" placeholder="驱动电机状态" value="1" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -447,7 +451,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverCtrlTemp1" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <label for="driverCtrlTemp1" code="driverCtrlTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动点击控制器温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverCtrlTemp1" placeholder="驱动点击控制器温度" value="60" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -456,7 +460,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverRPM1" class="col-sm-3 control-label">驱动电机转速</label>
+                                <label for="driverRPM1" code="driverRPM" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转速</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverRPM1" placeholder="驱动电机转速" value="28000" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -465,7 +469,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTorque1" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <label for="driverTorque1" code="driverTorque" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转矩</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTorque1" placeholder="驱动电机转矩" value="25000" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -474,7 +478,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTemp1" class="col-sm-3 control-label">驱动电机温度</label>
+                                <label for="driverTemp1" code="driverTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTemp1" placeholder="驱动电机温度" value="80" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -483,7 +487,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlInputVoltage1" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <label for="ctrlInputVoltage1" code="ctrlInputVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器输入电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlInputVoltage1" placeholder="电机控制器输入电压" value="30000" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -492,7 +496,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlDCBusCurrent1" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <label for="ctrlDCBusCurrent1" code="ctrlDCBusCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器直流母线电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlDCBusCurrent1" placeholder="电机控制器直流母线电流" value="10000" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -502,7 +506,7 @@
                             </div>
                             <!--<hr>
                             <div class="form-group">
-                                <label for="driverNo2" class="col-sm-3 control-label">驱动电机序号</label>
+                                <label for="driverNo2" code="driverNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverNo2" placeholder="驱动电机序号" value="2" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -511,7 +515,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverStatus2" class="col-sm-3 control-label">驱动电机状态</label>
+                                <label for="driverStatus2" code="driverStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverStatus2" placeholder="驱动电机状态" value="2" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -520,7 +524,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverCtrlTemp2" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <label for="driverCtrlTemp2" code="driverCtrlTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动点击控制器温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverCtrlTemp2" placeholder="驱动点击控制器温度" value="61" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -529,7 +533,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverRPM2" class="col-sm-3 control-label">驱动电机转速</label>
+                                <label for="driverRPM2" code="driverRPM" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转速</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverRPM2" placeholder="驱动电机转速" value="28001" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -538,7 +542,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTorque2" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <label for="driverTorque2" code="driverTorque" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转矩</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTorque2" placeholder="驱动电机转矩" value="25001" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -547,7 +551,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTemp2" class="col-sm-3 control-label">驱动电机温度</label>
+                                <label for="driverTemp2" code="driverTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTemp2" placeholder="驱动电机温度" value="81" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -556,7 +560,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlInputVoltage2" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <label for="ctrlInputVoltage2" code="ctrlInputVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器输入电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlInputVoltage2" placeholder="电机控制器输入电压" value="30001" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -565,7 +569,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlDCBusCurrent2" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <label for="ctrlDCBusCurrent2" code="ctrlDCBusCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器直流母线电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlDCBusCurrent2" placeholder="电机控制器直流母线电流" value="10001" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -575,7 +579,7 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="driverNo3" class="col-sm-3 control-label">驱动电机序号</label>
+                                <label for="driverNo3" code="driverNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverNo3" placeholder="驱动电机序号" value="3" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -584,7 +588,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverStatus3" class="col-sm-3 control-label">驱动电机状态</label>
+                                <label for="driverStatus3" code="driverStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverStatus3" placeholder="驱动电机状态" value="3" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -593,7 +597,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverCtrlTemp3" class="col-sm-3 control-label">驱动点击控制器温度</label>
+                                <label for="driverCtrlTemp3" code="driverCtrlTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动点击控制器温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverCtrlTemp3" placeholder="驱动点击控制器温度" value="62" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -602,7 +606,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverRPM3" class="col-sm-3 control-label">驱动电机转速</label>
+                                <label for="driverRPM3" code="driverRPM" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转速</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverRPM3" placeholder="驱动电机转速" value="28002" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -611,7 +615,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTorque3" class="col-sm-3 control-label">驱动电机转矩</label>
+                                <label for="driverTorque3" code="driverTorque" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机转矩</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTorque3" placeholder="驱动电机转矩" value="25002" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -620,7 +624,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverTemp3" class="col-sm-3 control-label">驱动电机温度</label>
+                                <label for="driverTemp3" code="driverTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverTemp3" placeholder="驱动电机温度" value="82" name="decValue02" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -629,7 +633,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlInputVoltage3" class="col-sm-3 control-label">电机控制器输入电压</label>
+                                <label for="ctrlInputVoltage3" code="ctrlInputVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器输入电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlInputVoltage3" placeholder="电机控制器输入电压" value="30002" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -638,7 +642,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="ctrlDCBusCurrent3" class="col-sm-3 control-label">电机控制器直流母线电流</label>
+                                <label for="ctrlDCBusCurrent3" code="ctrlDCBusCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电机控制器直流母线电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="ctrlDCBusCurrent3" placeholder="电机控制器直流母线电流" value="10002" name="decValue02" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -665,7 +669,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="fuelCellVoltage" class="col-sm-3 control-label">燃料电池电压</label>
+                                <label for="fuelCellVoltage" code="fuelCellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">燃料电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="fuelCellVoltage" placeholder="燃料电池电压" value="10000" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -674,7 +678,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="fuelCellCurrent" class="col-sm-3 control-label">燃料电池电流</label>
+                                <label for="fuelCellCurrent" code="fuelCellCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">燃料电池电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="fuelCellCurrent" placeholder="燃料电池电流" value="5000" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -683,7 +687,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="fuelConsumptionRate" class="col-sm-3 control-label">燃料消耗率</label>
+                                <label for="fuelConsumptionRate" code="fuelConsumptionRate" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">燃料消耗率</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="fuelConsumptionRate" placeholder="燃料消耗率" value="5000" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -692,7 +696,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeCount" class="col-sm-3 control-label">燃料电池温度探针总数</label>
+                                <label for="probeCount" code="probeCount" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">燃料电池温度探针总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeCount" placeholder="燃料电池温度探针总数" value="1" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -705,7 +709,7 @@
                                 <h4><p class="text-info">燃料电池温度探针列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp1" class="col-sm-3 control-label">温度</label>
+                                <label for="probeTemp1" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp1" placeholder="温度" value="90" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -714,7 +718,7 @@
                                 </div>
                             </div>
                             <!--<div class="form-group">
-                                <label for="probeTemp2" class="col-sm-3 control-label">温度</label>
+                                <label for="probeTemp2" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp2" placeholder="温度" value="91" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -723,7 +727,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp3" class="col-sm-3 control-label">温度</label>
+                                <label for="probeTemp3" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp3" placeholder="温度" value="92" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -733,7 +737,7 @@
                             </div>-->
                             <hr>
                             <div class="form-group">
-                                <label for="hydrogenSysMaxTemp" class="col-sm-3 control-label">氢系统中最高温度</label>
+                                <label for="hydrogenSysMaxTemp" code="hydrogenSysMaxTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢系统中最高温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="hydrogenSysMaxTemp" placeholder="氢系统中最高温度" value="1000" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -742,7 +746,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxTempProbeNo" class="col-sm-3 control-label">氢系统中最高温度探针代号</label>
+                                <label for="maxTempProbeNo" code="maxTempProbeNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢系统中最高温度探针代号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxTempProbeNo" placeholder="氢系统中最高温度探针代号" value="5" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -751,7 +755,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="hydrogenMaxConcentration" class="col-sm-3 control-label">氢气最高浓度</label>
+                                <label for="hydrogenMaxConcentration" code="hydrogenMaxConcentration" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢气最高浓度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="hydrogenMaxConcentration" placeholder="氢气最高浓度" value="24000" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -760,7 +764,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxConcentrationSensorNo" class="col-sm-3 control-label">氢气最高浓度传感器代号</label>
+                                <label for="maxConcentrationSensorNo" code="maxConcentrationSensorNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢气最高浓度传感器代号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxConcentrationSensorNo" placeholder="氢气最高浓度传感器代号" value="8" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -769,7 +773,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="hydrogenMaxPressure" class="col-sm-3 control-label">氢气最高压力</label>
+                                <label for="hydrogenMaxPressure" code="hydrogenMaxPressure" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢气最高压力</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="hydrogenMaxPressure" placeholder="氢气最高压力" value="450" name="decValue03" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -778,7 +782,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxPressureSensorNo" class="col-sm-3 control-label">氢气最高压力传感器代号</label>
+                                <label for="maxPressureSensorNo" code="maxPressureSensorNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">氢气最高压力传感器代号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxPressureSensorNo" placeholder="氢气最高压力传感器代号" value="17" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -787,7 +791,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="highTensionDC-DCstatus" class="col-sm-3 control-label">高压DC/DC状态</label>
+                                <label for="highTensionDC-DCstatus" code="highTensionDC-DCstatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">高压DC/DC状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="highTensionDC-DCstatus" placeholder="高压DC/DC状态" value="1" name="decValue03" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -813,7 +817,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="motorStatus" class="col-sm-3 control-label">发动机状态</label>
+                                <label for="motorStatus" code="motorStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">发动机状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorStatus" placeholder="发动机状态" value="1" name="decValue04" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -822,7 +826,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="motorRPM" class="col-sm-3 control-label">曲轴转速</label>
+                                <label for="motorRPM" code="motorRPM" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">曲轴转速</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorRPM" placeholder="曲轴转速" value="32000" name="decValue04" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -831,7 +835,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="motorFuelConsumptionRate" class="col-sm-3 control-label">燃料消耗率</label>
+                                <label for="motorFuelConsumptionRate" code="motorFuelConsumptionRate" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">燃料消耗率</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorFuelConsumptionRate" placeholder="燃料消耗率" value="12000" name="decValue04" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -857,7 +861,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="positionStatus" class="col-sm-3 control-label">定位状态</label>
+                                <label for="positionStatus" code="positionStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">定位状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="positionStatus" placeholder="定位状态" value="00000000" name="decValue05" onblur="genHexFromBin(this, 1)">
                                 </div>
@@ -866,7 +870,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="longitude" class="col-sm-3 control-label">经度</label>
+                                <label for="longitude" code="longitude" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">经度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="longitude" placeholder="经度" value="119345442" name="decValue05" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -875,7 +879,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="latitude" class="col-sm-3 control-label">纬度</label>
+                                <label for="latitude" code="latitude" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">纬度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="latitude" placeholder="纬度" value="26075960" name="decValue05" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -901,7 +905,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="maxVoltageSubSysNo" class="col-sm-3 control-label">最高电压电池子系统号</label>
+                                <label for="maxVoltageSubSysNo" code="maxVoltageSubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高电压电池子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxVoltageSubSysNo" placeholder="最高电压电池子系统号" value="3" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -910,7 +914,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxVoltageCellNo" class="col-sm-3 control-label">最高电压电池单体代号</label>
+                                <label for="maxVoltageCellNo" code="maxVoltageCellNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高电压电池单体代号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxVoltageCellNo" placeholder="最高电压电池单体代号" value="4" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -919,7 +923,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxVoltage" class="col-sm-3 control-label">最高电压</label>
+                                <label for="maxVoltage" code="maxVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxVoltage" placeholder="最高电压" value="8000" name="decValue06" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -928,7 +932,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minVoltageSubSysNo" class="col-sm-3 control-label">最低电压电池子系统号</label>
+                                <label for="minVoltageSubSysNo" code="minVoltageSubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低电压电池子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minVoltageSubSysNo" placeholder="最低电压电池子系统号" value="5" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -937,7 +941,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minVoltageCellNo" class="col-sm-3 control-label">最低电压电池单体代号</label>
+                                <label for="minVoltageCellNo" code="minVoltageCellNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低电压电池单体代号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minVoltageCellNo" placeholder="最低电压电池单体代号" value="6" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -946,7 +950,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minVoltage" class="col-sm-3 control-label">最低电压</label>
+                                <label for="minVoltage" code="minVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minVoltage" placeholder="最低电压" value="5000" name="decValue06" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -955,7 +959,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxTempSubSysNo" class="col-sm-3 control-label">最高温度子系统号</label>
+                                <label for="maxTempSubSysNo" code="maxTempSubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高温度子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxTempSubSysNo" placeholder="最高温度子系统号" value="7" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -964,7 +968,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxTempProbeNo" class="col-sm-3 control-label">最高温度探针序号</label>
+                                <label for="maxTempProbeNo" code="maxTempProbeNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高温度探针序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxTempProbeSn" placeholder="最高温度探针序号" value="8" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -973,7 +977,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="maxTemp" class="col-sm-3 control-label">最高温度</label>
+                                <label for="maxTemp" code="maxTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxTemp" placeholder="最高温度" value="170" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -982,7 +986,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minTempSubSysNo" class="col-sm-3 control-label">最低温度子系统号</label>
+                                <label for="minTempSubSysNo" code="minTempSubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低温度子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minTempSubSysNo" placeholder="最低温度子系统号" value="9" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -991,7 +995,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minTempProbeNo" class="col-sm-3 control-label">最低温度探针序号</label>
+                                <label for="minTempProbeNo" code="minTempProbeNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低温度探针序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minTempProbeNo" placeholder="最低温度探针序号" value="10" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1000,7 +1004,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="minTemp" class="col-sm-3 control-label">最低温度</label>
+                                <label for="minTemp" code="minTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最低温度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="minTemp" placeholder="最低温度" value="125" name="decValue06" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1026,7 +1030,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="maxAlarmLevel" class="col-sm-3 control-label">最高报警等级</label>
+                                <label for="maxAlarmLevel" code="maxAlarmLevel" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">最高报警等级</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="maxAlarmLevel" placeholder="最高报警等级" value="3" name="decValue07" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1035,7 +1039,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="generalAlarmFlag" class="col-sm-3 control-label">通用报警标志</label>
+                                <label for="generalAlarmFlag" code="generalAlarmFlag" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">通用报警标志</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="generalAlarmFlag" placeholder="通用报警标志" value="01010101000000000000000000000000" name="decValue07" onblur="genHexFromBin(this, 4)">
                                 </div>
@@ -1044,7 +1048,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="storageDownCnt" class="col-sm-3 control-label">可充电储能装置故障总数</label>
+                                <label for="storageDownCnt" code="storageDownCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置故障总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="storageDownCnt" placeholder="可充电储能装置故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1057,7 +1061,7 @@
                                 <h4><p class="text-info">可充电储能装置故障代码列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="storageDownCode1" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <label for="storageDownCode1" code="storageDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="storageDownCode1" placeholder="可充电储能装置故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1066,7 +1070,7 @@
                                 </div>
                             </div>
                             <!--<div class="form-group">
-                                <label for="storageDownCode2" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <label for="storageDownCode2" code="storageDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="storageDownCode2" placeholder="可充电储能装置故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1075,7 +1079,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="storageDownCode3" class="col-sm-3 control-label">可充电储能装置故障代码</label>
+                                <label for="storageDownCode3" code="storageDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="storageDownCode3" placeholder="可充电储能装置故障代码" value="103" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1085,7 +1089,7 @@
                             </div>-->
                             <hr>
                             <div class="form-group">
-                                <label for="driverDownCnt" class="col-sm-3 control-label">驱动电机故障总数</label>
+                                <label for="driverDownCnt" code="driverDownCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机故障总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverDownCnt" placeholder="驱动电机故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1098,7 +1102,7 @@
                                 <h4><p class="text-info">驱动电机故障代码列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="driverDownCode1" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <label for="driverDownCode1" code="driverDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverDownCode1" placeholder="驱动电机故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1107,7 +1111,7 @@
                                 </div>
                             </div>
                             <!--<div class="form-group">
-                                <label for="driverDownCode2" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <label for="driverDownCode2" code="driverDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverDownCode2" placeholder="驱动电机故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1116,7 +1120,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="driverDownCode3" class="col-sm-3 control-label">驱动电机故障代码</label>
+                                <label for="driverDownCode3" code="driverDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">驱动电机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="driverDownCode3" placeholder="驱动电机故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1126,7 +1130,7 @@
                             </div>-->
                             <hr>
                             <div class="form-group">
-                                <label for="motorDownCnt" class="col-sm-3 control-label">发动机故障总数</label>
+                                <label for="motorDownCnt" code="motorDownCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">发动机故障总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorDownCnt" placeholder="发动机故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1139,7 +1143,7 @@
                                 <h4><p class="text-info">发动机故障代码列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="motorDownCode1" class="col-sm-3 control-label">发动机故障代码</label>
+                                <label for="motorDownCode1" code="motorDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">发动机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorDownCode1" placeholder="发动机故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1148,7 +1152,7 @@
                                 </div>
                             </div>
                             <!--<div class="form-group">
-                                <label for="motorDownCode2" class="col-sm-3 control-label">发动机故障代码</label>
+                                <label for="motorDownCode2" code="motorDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">发动机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorDownCode2" placeholder="发动机故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1157,7 +1161,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="motorDownCode3" class="col-sm-3 control-label">发动机故障代码</label>
+                                <label for="motorDownCode3" code="motorDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">发动机故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="motorDownCode3" placeholder="发动机故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1167,7 +1171,7 @@
                             </div>-->
                             <hr>
                             <div class="form-group">
-                                <label for="otherDownCnt" class="col-sm-3 control-label">其他故障总数</label>
+                                <label for="otherDownCnt" code="otherDownCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">其他故障总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="otherDownCnt" placeholder="其他故障总数" value="1" name="decValue07" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1180,7 +1184,7 @@
                                 <h4><p class="text-info">其他故障代码列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="otherDownCode1" class="col-sm-3 control-label">其他故障代码</label>
+                                <label for="otherDownCode1" code="otherDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">其他故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="otherDownCode1" placeholder="其他故障代码" value="10000001" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1189,7 +1193,7 @@
                                 </div>
                             </div>
                             <!--<div class="form-group">
-                                <label for="otherDownCode2" class="col-sm-3 control-label">其他故障代码</label>
+                                <label for="otherDownCode2" code="otherDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">其他故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="otherDownCode2" placeholder="其他故障代码" value="10000002" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1198,7 +1202,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="otherDownCode3" class="col-sm-3 control-label">其他故障代码</label>
+                                <label for="otherDownCode3" code="otherDownCode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">其他故障代码</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="otherDownCode3" placeholder="其他故障代码" value="10000003" name="decValue07" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1225,7 +1229,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="storageSubSysCnt" class="col-sm-3 control-label">可充电储能子系统个数</label>
+                                <label for="storageSubSysCnt" code="storageSubSysCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="storageSubSysCnt" placeholder="可充电储能子系统个数" value="1" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1238,7 +1242,7 @@
                                 <h4><p class="text-info">可充电储能子系统电压信息列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="subSysNo1" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="subSysNo1" code="subSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="subSysNo1" placeholder="可充电储能子系统号" value="1" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1247,7 +1251,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceVoltage1" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <label for="deviceVoltage1" code="deviceVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceVoltage1" placeholder="可充电储能装置电压" value="2200" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1256,7 +1260,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceCurrent1" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <label for="deviceCurrent1" code="deviceCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceCurrent1" placeholder="可充电储能装置电流" value="12000" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1265,7 +1269,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellCnt1" class="col-sm-3 control-label">单体电池总数</label>
+                                <label for="cellCnt1" code="cellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellCnt1" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1274,7 +1278,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellNoStart1" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <label for="frameCellNoStart1" code="frameCellNoStart" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧起始电池序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellNoStart1" placeholder="本帧起始电池序号" value="1" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1283,7 +1287,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellCnt1" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <label for="frameCellCnt1" code="frameCellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellCnt1" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1296,7 +1300,7 @@
                                 <h4><p class="text-info">单体电池电压列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage11" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage11" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage11" placeholder="单体电池电压" value="32000" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1305,7 +1309,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage12" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage12" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage12" placeholder="单体电池电压" value="32001" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1314,7 +1318,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage13" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage13" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage13" placeholder="单体电池电压" value="32002" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1324,7 +1328,7 @@
                             </div>
                             <!--<hr>
                             <div class="form-group">
-                                <label for="subSysNo2" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="subSysNo2" code="subSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="subSysNo2" placeholder="可充电储能子系统号" value="2" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1333,7 +1337,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceVoltage2" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <label for="deviceVoltage2" code="deviceVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceVoltage2" placeholder="可充电储能装置电压" value="2201" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1342,7 +1346,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceCurrent2" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <label for="deviceCurrent2" code="deviceCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceCurrent2" placeholder="可充电储能装置电流" value="12001" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1351,7 +1355,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellCnt2" class="col-sm-3 control-label">单体电池总数</label>
+                                <label for="cellCnt2" code="cellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellCnt2" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1360,7 +1364,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellNoStart2" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <label for="frameCellNoStart2" code="frameCellNoStart" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧起始电池序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellNoStart2" placeholder="本帧起始电池序号" value="4" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1369,7 +1373,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellCnt2" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <label for="frameCellCnt2" code="frameCellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellCnt2" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1382,7 +1386,7 @@
                                 <h4><p class="text-info">单体电池电压列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage21" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage21" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage21" placeholder="单体电池电压" value="2204" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1391,7 +1395,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage22" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage22" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage22" placeholder="单体电池电压" value="2205" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1400,7 +1404,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage23" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage23" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage23" placeholder="单体电池电压" value="2206" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1410,7 +1414,7 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="subSysNo3" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="subSysNo3" code="subSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="subSysNo3" placeholder="可充电储能子系统号" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1419,7 +1423,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceVoltage3" class="col-sm-3 control-label">可充电储能装置电压</label>
+                                <label for="deviceVoltage3" code="deviceVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceVoltage3" placeholder="可充电储能装置电压" value="2202" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1428,7 +1432,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="deviceCurrent3" class="col-sm-3 control-label">可充电储能装置电流</label>
+                                <label for="deviceCurrent3" code="deviceCurrent" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能装置电流</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="deviceCurrent3" placeholder="可充电储能装置电流" value="12002" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1437,7 +1441,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellCnt3" class="col-sm-3 control-label">单体电池总数</label>
+                                <label for="cellCnt3" code="cellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellCnt3" placeholder="单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1446,7 +1450,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellNoStart3" class="col-sm-3 control-label">本帧起始电池序号</label>
+                                <label for="frameCellNoStart3" code="frameCellNoStart" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧起始电池序号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellNoStart3" placeholder="本帧起始电池序号" value="7" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1455,7 +1459,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="frameCellCnt3" class="col-sm-3 control-label">本帧单体电池总数</label>
+                                <label for="frameCellCnt3" code="frameCellCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">本帧单体电池总数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="frameCellCnt3" placeholder="本帧单体电池总数" value="3" name="decValue08" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1468,7 +1472,7 @@
                                 <h4><p class="text-info">单体电池电压列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage31" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage31" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage31" placeholder="单体电池电压" value="2207" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1477,7 +1481,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage32" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage32" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage32" placeholder="单体电池电压" value="2208" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1486,7 +1490,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellVoltage33" class="col-sm-3 control-label">单体电池电压</label>
+                                <label for="cellVoltage33" code="cellVoltage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">单体电池电压</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellVoltage33" placeholder="单体电池电压" value="2209" name="decValue08" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1513,7 +1517,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="tempstorageSubSysCnt" class="col-sm-3 control-label">可充电储能子系统个数</label>
+                                <label for="tempstorageSubSysCnt" code="tempstorageSubSysCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="tempstorageSubSysCnt" placeholder="可充电储能子系统个数" value="1" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1526,7 +1530,7 @@
                                 <h4><p class="text-info">可充电储能子系统温度信息列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="tempsubSysNo1" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="tempsubSysNo1" code="tempsubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="tempsubSysNo1" placeholder="可充电储能子系统号" value="1" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1535,7 +1539,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeCnt1" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <label for="probeCnt1" code="probeCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能温度探针个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeCnt1" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1548,7 +1552,7 @@
                                 <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp11" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp11" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp11" placeholder="探针温度值" value="85" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1557,7 +1561,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp12" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp12" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp12" placeholder="探针温度值" value="86" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1566,7 +1570,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp13" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp13" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp13" placeholder="探针温度值" value="87" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1576,7 +1580,7 @@
                             </div>
                             <!--<hr>
                             <div class="form-group">
-                                <label for="tempsubSysNo2" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="tempsubSysNo2" code="tempsubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="tempsubSysNo2" placeholder="可充电储能子系统号" value="2" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1585,7 +1589,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeCnt2" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <label for="probeCnt2" code="probeCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能温度探针个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeCnt2" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1598,7 +1602,7 @@
                                 <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp21" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp21" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp21" placeholder="探针温度值" value="88" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1607,7 +1611,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp22" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp22" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp22" placeholder="探针温度值"  value="89" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1616,7 +1620,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp23" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp23" code="probeCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp23" placeholder="探针温度值" value="90" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1626,7 +1630,7 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="tempsubSysNo3" class="col-sm-3 control-label">可充电储能子系统号</label>
+                                <label for="tempsubSysNo3" code="tempsubSysNo" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能子系统号</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="tempsubSysNo3" placeholder="可充电储能子系统号" value="3" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1635,7 +1639,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeCnt3" class="col-sm-3 control-label">可充电储能温度探针个数</label>
+                                <label for="probeCnt3" code="probeCnt" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">可充电储能温度探针个数</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeCnt3" placeholder="可充电储能温度探针个数" value="3" name="decValue09" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1648,7 +1652,7 @@
                                 <h4><p class="text-info">储能子系统探针温度值列表</p></h4>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp31" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp31" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp31" placeholder="探针温度值" value="91" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1657,7 +1661,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp32" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp32" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp32" placeholder="探针温度值" value="92" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1666,7 +1670,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="probeTemp33" class="col-sm-3 control-label">探针温度值</label>
+                                <label for="probeTemp33" code="probeTemp" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">探针温度值</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="probeTemp33" placeholder="探针温度值" value="93" name="decValue09" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1693,7 +1697,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="direction" class="col-sm-3 control-label">方向</label>
+                                <label for="direction" code="direction" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">方向</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="direction" placeholder="方向" value="270" name="decValue80" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1719,7 +1723,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="remainderPCT" class="col-sm-3 control-label">剩余电量百分比</label>
+                                <label for="remainderPCT" code="remainderPCT" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">剩余电量百分比</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="remainderPCT" placeholder="剩余电量百分比" value="70" name="decValue81" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1728,7 +1732,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="residualMileage" class="col-sm-3 control-label">剩余可行驶里程</label>
+                                <label for="residualMileage" code="residualMileage" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">剩余可行驶里程</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="residualMileage" placeholder="剩余可行驶里程" value="230" name="decValue81" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1737,7 +1741,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="plugConnStatus" class="col-sm-3 control-label">充电插头连接状态</label>
+                                <label for="plugConnStatus" code="plugConnStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">充电插头连接状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="plugConnStatus" placeholder="充电插头连接状态" value="2" name="decValue81" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1746,7 +1750,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="remainderChargeTime" class="col-sm-3 control-label">剩余充电时间</label>
+                                <label for="remainderChargeTime" code="remainderChargeTime" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">剩余充电时间</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="remainderChargeTime" placeholder="剩余充电时间" value="50" name="decValue81" onblur="genHexFromDec(this, 4)">
                                 </div>
@@ -1755,7 +1759,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cellEqualization" class="col-sm-3 control-label">电池均衡激活</label>
+                                <label for="cellEqualization" code="cellEqualization" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">电池均衡激活</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="cellEqualization" placeholder="电池均衡激活" value="1" name="decValue81" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1764,7 +1768,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="reserve" class="col-sm-3 control-label">预留</label>
+                                <label for="reserve" code="reserve" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">预留</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="reserve" placeholder="预留" value="0" name="decValue81" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -1791,7 +1795,7 @@
                         <div class="panel-body">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label for="doorDataLength" class="col-sm-3 control-label">车门数据长度</label>
+                                    <label for="doorDataLength" code="doorDataLength" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车门数据长度</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="doorDataLength" placeholder="车门数据长度" value="2" name="decValue82" onblur="genHexFromDec(this, 2)">
                                     </div>
@@ -1800,7 +1804,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="doorData" class="col-sm-3 control-label">车门数据</label>
+                                    <label for="doorData" code="doorData" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车门数据</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="doorData" placeholder="车门数据" value="0101000100000000" name="decValue82" onblur="genHexFromBin(this, 2)">
                                     </div>
@@ -1809,7 +1813,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="key" class="col-sm-3 control-label">车钥匙</label>
+                                    <label for="key" code="key" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车钥匙</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="key" placeholder="车钥匙" value="2" name="decValue82" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1836,7 +1840,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="lightDataLength" class="col-sm-3 control-label">车灯数据长度</label>
+                                <label for="lightDataLength" code="lightDataLength" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车灯数据长度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="lightDataLength" placeholder="车灯数据长度" value="2" name="decValue83" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1845,7 +1849,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="lightData" class="col-sm-3 control-label">车灯数据</label>
+                                <label for="lightData" code="lightData" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车灯数据</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="lightData" placeholder="车灯数据" value="1101110100000000" name="decValue83" onblur="genHexFromBin(this, 2)">
                                 </div>
@@ -1871,7 +1875,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="airCondDataLength" class="col-sm-3 control-label">空调数据长度</label>
+                                <label for="airCondDataLength" code="airCondDataLength" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">空调数据长度</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="airCondDataLength" placeholder="空调数据长度" value="7" name="decValue84" onblur="genHexFromDec(this, 2)">
                                 </div>
@@ -1880,18 +1884,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <!--<label for="airCondData" class="col-sm-3 control-label">空调数据</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="airCondData" placeholder="空调数据" value="00000001000000110000001000000011000000010000000000000100" name="decValue84" onblur="genHexFromBin(this, 7)">
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="airCondDataHex" placeholder="HexValue" readonly="readonly" name="hexValue84">
-                                </div>-->
                                 <div class="row row-margin-bottom text-left col-sm-offset-1">
                                     <h4><p class="text-info">空调数据</p></h4>
                                 </div>
                                 <div class="form-group">
-                                    <label for="ACStatus" class="col-sm-3 control-label">A/C开关状态</label>
+                                    <label for="ACStatus" code="ACStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">A/C开关状态</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="ACStatus" placeholder="A/C开关状态" value="1" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1900,7 +1897,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="tempGear" class="col-sm-3 control-label">车内温度值</label>
+                                    <label for="tempGear" code="tempGear" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车内温度值</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="tempGear" placeholder="车内温度值" value="3" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1909,7 +1906,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="amountOfWind" class="col-sm-3 control-label">风量调节</label>
+                                    <label for="amountOfWind" code="amountOfWind" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">风量调节</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="amountOfWind" placeholder="风量调节" value="2" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1918,7 +1915,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="windMode" class="col-sm-3 control-label">出风模式</label>
+                                    <label for="windMode" code="windMode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">出风模式</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="windMode" placeholder="出风模式" value="3" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1927,7 +1924,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="windMode" class="col-sm-3 control-label">前风档除霜</label>
+                                    <label for="frontWindshieldDefrost" code="frontWindshieldDefrost" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">前风档除霜</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="frontWindshieldDefrost" placeholder="前风档除霜" value="1" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1936,7 +1933,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="rearWindshieldHeat" class="col-sm-3 control-label">后风挡加热</label>
+                                    <label for="rearWindshieldHeat" code="rearWindshieldHeat" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">后风挡加热</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="rearWindshieldHeat" placeholder="后风挡加热" value="0" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1945,7 +1942,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="controllMode" class="col-sm-3 control-label">空调控制模式</label>
+                                    <label for="controllMode" code="controllMode" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">空调控制模式</label>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="controllMode" placeholder="空调控制模式" value="4" name="decValue84" onblur="genHexFromDec(this, 1)">
                                     </div>
@@ -1972,18 +1969,18 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="IGNOnTime" class="col-sm-3 control-label">启动时间</label>
+                                <label for="IGNOnTime" code="IGNOnTime" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">启动时间</label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="IGNOnTime" placeholder="启动时间" value="20180312173000" name="decValue85" onblur="genTimeHex(this, 6)">
+                                    <input type="text" class="form-control" id="IGNOnTime" placeholder="启动时间" value="180312173000" name="decValue85" onblur="genTimeHex(this, 6)">
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="IGNOnTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue85">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="IGNOffTime" class="col-sm-3 control-label">熄火时间</label>
+                                <label for="IGNOffTime" code="IGNOffTime" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">熄火时间</label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="IGNOffTime" placeholder="熄火时间" value="20180312214020" name="decValue85" onblur="genTimeHex(this, 6)">
+                                    <input type="text" class="form-control" id="IGNOffTime" placeholder="熄火时间" value="180312214020" name="decValue85" onblur="genTimeHex(this, 6)">
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="IGNOffTimeHex" placeholder="HexValue" readonly="readonly" name="hexValue85">
@@ -2007,7 +2004,7 @@
                     <form class="form-horizontal row-margin-top">
                         <div class="panel-body">
                             <div class="form-group">
-                                <label for="powerSysReady" class="col-sm-3 control-label">动力系统就绪</label>
+                                <label for="powerSysReady" code="powerSysReady" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">动力系统就绪</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="powerSysReady" placeholder="动力系统就绪" value="1" name="decValue86" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -2016,7 +2013,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="emerPowerDown" class="col-sm-3 control-label">紧急下电请求</label>
+                                <label for="emerPowerDown" code="emerPowerDown" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">紧急下电请求</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="emerPowerDown" placeholder="紧急下电请求" value="0" name="decValue86" onblur="genHexFromDec(this, 1)">
                                 </div>
@@ -2025,7 +2022,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="currentStatus" class="col-sm-3 control-label">车辆当前状态</label>
+                                <label for="currentStatus" code="currentStatus" class="col-sm-3 control-label" onmouseover="showTip(this)" data-toggle="tooltip" title="" data-html="true" data-placement="right">车辆当前状态</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="currentStatus" placeholder="车辆当前状态" value="2" name="decValue86" onblur="genHexFromDec(this, 1)">
                                 </div>
