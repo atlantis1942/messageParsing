@@ -6,12 +6,29 @@ $(function () {
         genMessage();
     });
     $("[data-toggle='tooltip']").tooltip();
+    $('#myTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+    $('#messageType').change(function () {
+        $('#messageTypeHex').val($('#messageType').val());
+    })
 });
 
+/**
+ * 显示属性提示信息
+ * @param element
+ */
 function showTip (element) {
     $(element).attr("title", tips[$(element).attr("code")]).tooltip('fixTitle').tooltip('show');
 }
 
+/**
+ * 十进制生成十六进制字符串
+ * @param element
+ * @param length
+ * @returns {boolean}
+ */
 function genHexFromDec(element, length) {
     var decValue = $(element).val();
     if (decValue === "") {
@@ -21,6 +38,12 @@ function genHexFromDec(element, length) {
     $("#"+$(element).attr('id')+"Hex").val(ret);
 }
 
+/**
+ * 二进制生成十六进制字符串（大端翻转）
+ * @param element
+ * @param length
+ * @returns {boolean}
+ */
 function genHexFromBin(element, length) {
     var binValue = $(element).val();
     if (binValue === "") {
@@ -30,6 +53,12 @@ function genHexFromBin(element, length) {
     $("#"+$(element).attr('id')+"Hex").val(ret);
 }
 
+/**
+ * 日期生成十六进制字符串
+ * @param element
+ * @param length
+ * @returns {boolean}
+ */
 function genTimeHex(element, length) {
     var decValue = $(element).val();
     if (decValue === "") {
@@ -55,6 +84,11 @@ function genTimeHex(element, length) {
     $("#"+$(element).attr('id')+"Hex").val(data.join(""));
 }
 
+/**
+ * 字符串获取ASCII
+ * @param element
+ * @returns {boolean}
+ */
 function genASCHex(element) {
     var value = $(element).val();
     if (value === "") {
@@ -65,6 +99,32 @@ function genASCHex(element) {
         data.push(DecToHex(value.charCodeAt(i), 1));
     }
     $("#"+$(element).attr('id')+"Hex").val(data.join(""));
+}
+
+/**
+ * 生成报文
+ */
+function genMessage() {
+    var type = $('#myTab li.active a').attr("code");
+    $("#message").val("");
+    var payloadData = [];
+    $("#" + type + " input[name=hexValueMsg]").each(function() {
+        payloadData.push($(this).val())
+    });
+    var payload = payloadData.join("");
+    var payloadLen = payload.length/2;
+    $("#payloadLength" + "_" + type).val(payloadLen);
+    $("#payloadLengthHex" + "_" + type).val(DecToHex(payloadLen, 2));
+    var messageData = [];
+    $("#" + type + " input[name=hexValueHead]").each(function() {
+        messageData.push($(this).val())
+    });
+    messageData.push.apply(messageData, payloadData);
+    var msg = messageData.join("");
+    var checkCode = genCheckCode(msg);
+    $("#checkCodeHex" + "_" + type).val(checkCode);
+    msg = msg + checkCode;
+    $("#message").val(msg);
 }
 
 /**
@@ -87,7 +147,13 @@ function DecToHex(decValue, length) {
     return hexCharCode.join("");
 }
 
-
+/**
+ * 二进制转十六进制
+ * @param binValue
+ * @param length
+ * @returns {string}
+ * @constructor
+ */
 function BinToHex(binValue, length) {
     //十六进制每4位转换为1位，byte转换后长度为2，word为4，dword为8
     var len = length * 2;
@@ -102,94 +168,11 @@ function BinToHex(binValue, length) {
     return hexCharCode.join("");
 }
 
-function genMessage() {
-    $("#message").val("");
-    var payloadData = [];
-    $("input[name=hexValue00]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("01");
-    $("input[name=hexValue01]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("02");
-    $("input[name=hexValue02]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("03");
-    $("input[name=hexValue03]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("04");
-    $("input[name=hexValue04]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("05");
-    $("input[name=hexValue05]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("06");
-    $("input[name=hexValue06]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("07");
-    $("input[name=hexValue07]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("08");
-    $("input[name=hexValue08]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("09");
-    $("input[name=hexValue09]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("80");
-    $("input[name=hexValue80]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("81");
-    $("input[name=hexValue81]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("82");
-    $("input[name=hexValue82]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("83");
-    $("input[name=hexValue83]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("84");
-    $("input[name=hexValue84]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("85");
-    $("input[name=hexValue85]").each(function() {
-        payloadData.push($(this).val())
-    });
-    payloadData.push("86");
-    $("input[name=hexValue86]").each(function() {
-        payloadData.push($(this).val())
-    });
-    //$("#message").val(payloadData.join(""));
-    var payload = payloadData.join("");
-    var payloadLen = payload.length/2;
-    $("#payloadLength").val(payloadLen);
-    $("#payloadLengthHex").val(DecToHex(payloadLen, 2));
-    var messageData = [];
-    $("input[name=hexValueHead]").each(function() {
-        messageData.push($(this).val())
-    });
-    //messageData.push(DecToHex(payloadLen, 2));
-    messageData.push.apply(messageData, payloadData);
-    var msg = messageData.join("");
-    var checkCode = genCheckCode(msg);
-    $("#checkCodeHex").val(checkCode);
-    msg = msg + checkCode;
-    $("#message").val(msg);
-}
-
+/**
+ * 生成校验码（异或）
+ * @param msg
+ * @returns {string}
+ */
 function genCheckCode(msg) {
     //去掉消息头
     msg = msg.substr(4);
